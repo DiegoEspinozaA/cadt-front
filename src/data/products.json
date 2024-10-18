@@ -1,0 +1,253 @@
+[
+    {
+        "id": 1,
+        "nombre": "Aguja",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 2,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 3,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 4,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 5,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 6,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 7,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 8,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 9,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 10,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 11,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 12,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 13,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 14,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 15,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 16,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 17,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 18,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 19,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 20,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 21,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 22,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 23,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 24,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 25,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 26,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 27,
+        "nombre": "Guantes de Latex",
+        "precio": 15.99,
+        "cantidad": 1,
+        "categoria": "Insumos",
+        "uso": "Unico"
+    },
+    {
+        "id": 2,
+        "nombre": "Pack de Cerveza Rubia",
+        "precio": 12.49,
+        "cantidad": 100,
+        "categoria": "Herramientas",
+        "uso": "Reutilizable"
+    },
+    {
+        "id": 3,
+        "nombre": "Paracetamol",
+        "precio": 29.99,
+        "cantidad": 40,
+        "sueltoOCaja": "Caja",
+        "categoria": "Consumibles",
+        "uso": "Fraccionario",
+        "fecha_creacion": "2020-05-20",
+        "cajas": [
+            {
+                "id": 1,
+                "capacidadTotal": 12,
+                "cantidadActual": 10
+            },
+            {
+                "id": 2,
+                "capacidadTotal": 8,
+                "cantidadActual": 3
+            },
+            {
+                "id": 3,
+                "capacidadTotal": 8,
+                "cantidadActual": 2
+            }
+        ]
+    }
+]

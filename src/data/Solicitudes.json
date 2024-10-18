@@ -1,0 +1,167 @@
+[
+    {
+        "id": 1,
+        "fecha": "2024-08-14T14:00:00Z",
+        "estado": "Pendiente",
+        "responsable": "Diego Espinoza",
+        "unidad": "Box 1",
+        "descripcion": "Se requiere 2 jeringas de 20cc para el box 1 urgente.",
+        "productos": [
+            {
+                "id": 1,
+                "nombre": "Jeringa",
+                "cantidad_solicitada": 10,
+                "cantidad_entregada": null
+            },
+            {
+                "id": 2,
+                "nombre": "Isopos",
+                "cantidad_solicitada": 20,
+                "cantidad_entregada": null
+            }
+            ,
+            {
+                "id": 3,
+                "nombre": "Isopos",
+                "cantidad_solicitada": 20,
+                "cantidad_entregada": null
+            }
+            ,
+            {
+                "id": 4,
+                "nombre": "Isopos",
+                "cantidad_solicitada": 20,
+                "cantidad_entregada": null
+            }
+            ,
+            {
+                "id": 5,
+                "nombre": "Isopos",
+                "cantidad_solicitada": 20,
+                "cantidad_entregada": null
+            }
+            ,
+            {
+                "id": 6,
+                "nombre": "Isopos",
+                "cantidad_solicitada": 20,
+                "cantidad_entregada": null
+            }
+            ,
+            {
+                "id": 7,
+                "nombre": "Isopos",
+                "cantidad_solicitada": 20,
+                "cantidad_entregada": null
+            }
+            ,
+            {
+                "id": 8,
+                "nombre": "Isopos",
+                "cantidad_solicitada": 20,
+                "cantidad_entregada": null
+            }
+            
+            ,
+            {
+                "id": 9,
+                "nombre": "Isopos",
+                "cantidad_solicitada": 20,
+                "cantidad_entregada": null
+            }
+            ,
+            {
+                "id": 10,
+                "nombre": "Isopos",
+                "cantidad_solicitada": 20,
+                "cantidad_entregada": null
+            }
+            ,
+            {
+                "id": 11,
+                "nombre": "Isopos",
+                "cantidad_solicitada": 20,
+                "cantidad_entregada": null
+            }
+            ,
+            {
+                "id": 12,
+                "nombre": "Isopos",
+                "cantidad_solicitada": 20,
+                "cantidad_entregada": null
+            }
+            ,
+            {
+                "id": 13,
+                "nombre": "Isopos",
+                "cantidad_solicitada": 20,
+                "cantidad_entregada": null
+            }
+            
+        ]
+    },
+    {
+        "id": 2,
+        "fecha": "2024-08-14T14:00:00Z",
+        "estado": "Pendiente",
+        "responsable": "Ricardo Hidalgo",
+        "unidad": "Box 2",
+        "descripcion": "Se requiere 2 jeringas de 20cc para el box 2 urgente. me hago cargo de todo",
+        "productos": [
+            {
+                "id": 1,
+                "nombre": "Jeringa",
+                "cantidad": 40,
+                "unidad": ""
+            },
+            {
+                "id": 2,
+                "nombre": "Isopos",
+                "cantidad": 10,
+                "unidad": ""
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "fecha": "2024-08-14T14:00:00Z",
+        "estado": "Rechazada",
+        "responsable": "Diego Espinoza",
+        "unidad": "Box 1",
+        "productos": [
+            {
+                "id": 1,
+                "nombre": "Jeringa",
+                "cantidad": 0,
+                "unidad": ""
+            },
+            {
+                "id": 2,
+                "nombre": "Isopos",
+                "cantidad": 0,
+                "unidad": ""
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "fecha": "2024-08-14T14:00:00Z",
+        "estado": "Aceptada",
+        "responsable": "Diego Espinoza",
+        "unidad": "Box 1",
+        "productos": [
+            {
+                "id": 1,
+                "nombre": "Jeringa",
+                "cantidad": 0,
+                "unidad": ""
+            },
+            {
+                "id": 2,
+                "nombre": "Isopos",
+                "cantidad": 0,
+                "unidad": ""
+            }
+        ]
+    }
+]

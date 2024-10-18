@@ -1,0 +1,15 @@
+[
+    {
+        "id": 1,
+        "nombre": "Unico"
+    },
+    {
+        "id": 2,
+        "nombre": "Reutilizable"
+    },
+    {
+        "id": 3,
+        "nombre": "Fraccionario"
+    }
+    
+]
