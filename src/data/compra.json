@@ -1,0 +1,200 @@
+{
+    "idCompra": "123456789",
+    "fecha": "2024-08-14T14:00:00Z",
+    "cliente": {
+      "idCliente": "987654321",
+      "nombre": "Juan Pérez"
+    },
+    "productos": [
+      {
+        "idProducto": "001",
+        "nombreProducto": "Botella de Vino Tinto",
+        "cantidad": 1,
+        "precioPorUnidad": 15.99,
+        "precioTotal": 15.99
+      },
+      {
+        "idProducto": "002",
+        "nombreProducto": "Pack de Cerveza Rubia sdfsdfsdfsdfsdfsdfsdfsdfsdfsdf",
+        "cantidad": 100,
+        "precioPorUnidad": 12.49,
+        "precioTotal": 24.98
+      },
+      {
+        "idProducto": "003",
+        "nombreProducto": "Botella de Whisky",
+        "cantidad": 1,
+        "precioPorUnidad": 29.99,
+        "precioTotal": 29.99
+      },
+      {
+        "idProducto": "004",
+        "nombreProducto": "Vodka",
+        "cantidad": 1,
+        "precioPorUnidad": 19.99,
+        "precioTotal": 19.99
+      },
+      {
+        "idProducto": "005",
+        "nombreProducto": "Ron",
+        "cantidad": 1,
+        "precioPorUnidad": 17.99,
+        "precioTotal": 17.99
+      },
+      {
+        "idProducto": "006",
+        "nombreProducto": "Tequila",
+        "cantidad": 1,
+        "precioPorUnidad": 25.49,
+        "precioTotal": 25.49
+      },
+      {
+        "idProducto": "007",
+        "nombreProducto": "Ginebra",
+        "cantidad": 1,
+        "precioPorUnidad": 22.99,
+        "precioTotal": 22.99
+      },
+      {
+        "idProducto": "008",
+        "nombreProducto": "Pack de Cerveza Negra",
+        "cantidad": 2,
+        "precioPorUnidad": 13.99,
+        "precioTotal": 27.98
+      },
+      {
+        "idProducto": "009",
+        "nombreProducto": "Vermut",
+        "cantidad": 1,
+        "precioPorUnidad": 11.49,
+        "precioTotal": 11.49
+      },
+      {
+        "idProducto": "010",
+        "nombreProducto": "Champaña",
+        "cantidad": 1,
+        "precioPorUnidad": 39.99,
+        "precioTotal": 39.99
+      },
+      {
+        "idProducto": "011",
+        "nombreProducto": "Licor de Café",
+        "cantidad": 1,
+        "precioPorUnidad": 14.99,
+        "precioTotal": 14.99
+      },
+      {
+        "idProducto": "012",
+        "nombreProducto": "Botella de Vino Blanco",
+        "cantidad": 1,
+        "precioPorUnidad": 13.99,
+        "precioTotal": 13.99
+      },
+      {
+        "idProducto": "013",
+        "nombreProducto": "Pack de Cerveza Artesanal",
+        "cantidad": 3,
+        "precioPorUnidad": 16.99,
+        "precioTotal": 50.97
+      },
+      {
+        "idProducto": "014",
+        "nombreProducto": "Mezcal",
+        "cantidad": 1,
+        "precioPorUnidad": 27.99,
+        "precioTotal": 27.99
+      },
+      {
+        "idProducto": "015",
+        "nombreProducto": "Sidra",
+        "cantidad": 2,
+        "precioPorUnidad": 9.49,
+        "precioTotal": 18.98
+      },
+      {
+        "idProducto": "016",
+        "nombreProducto": "Aguardiente",
+        "cantidad": 1,
+        "precioPorUnidad": 14.49,
+        "precioTotal": 14.49
+      },
+      {
+        "idProducto": "017",
+        "nombreProducto": "Cerveza sin Alcohol",
+        "cantidad": 2,
+        "precioPorUnidad": 8.99,
+        "precioTotal": 17.98
+      },
+      {
+        "idProducto": "018",
+        "nombreProducto": "Cava",
+        "cantidad": 1,
+        "precioPorUnidad": 21.99,
+        "precioTotal": 21.99
+      },
+      {
+        "idProducto": "019",
+        "nombreProducto": "Sake",
+        "cantidad": 1,
+        "precioPorUnidad": 18.99,
+        "precioTotal": 18.99
+      },
+      {
+        "idProducto": "020",
+        "nombreProducto": "Coñac",
+        "cantidad": 1,
+        "precioPorUnidad": 32.99,
+        "precioTotal": 32.99
+      }
+      ,
+      {
+        "idProducto": "021",
+        "nombreProducto": "Coñac",
+        "cantidad": 1,
+        "precioPorUnidad": 32.99,
+        "precioTotal": 32.99
+      }
+      ,
+      {
+        "idProducto": "022",
+        "nombreProducto": "Coñac",
+        "cantidad": 1,
+        "precioPorUnidad": 32.99,
+        "precioTotal": 32.99
+      }
+      ,
+      {
+        "idProducto": "023",
+        "nombreProducto": "Coñac",
+        "cantidad": 1,
+        "precioPorUnidad": 32.99,
+        "precioTotal": 32.99
+      }
+      ,
+      {
+        "idProducto": "024",
+        "nombreProducto": "Coñac",
+        "cantidad": 1,
+        "precioPorUnidad": 32.99,
+        "precioTotal": 32.99
+      }
+      ,
+      {
+        "idProducto": "025",
+        "nombreProducto": "Coñac",
+        "cantidad": 1,
+        "precioPorUnidad": 32.99,
+        "precioTotal": 32.99
+      }
+      ,
+      {
+        "idProducto": "026",
+        "nombreProducto": "Coñac",
+        "cantidad": 1,
+        "precioPorUnidad": 32.99,
+        "precioTotal": 32.99
+      }
+    ],
+    "montoTotal": 490.67
+  }
+  

@@ -1,0 +1,14 @@
+[
+    {
+        "id": 0,
+        "nombre": "Salud"
+    },
+    {
+        "id": 1,
+        "nombre": "Farmaceutica"
+    },
+    {
+        "id": 2,
+        "nombre": "Odontologia"
+    }
+]
