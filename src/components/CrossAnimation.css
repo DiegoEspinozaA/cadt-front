@@ -1,0 +1,37 @@
+.cross-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.crossmark {
+    width: 100px;
+    height: 100px;
+    stroke-width: 2;
+    stroke: #e53935; /* Rojo */
+    fill: none;
+}
+
+.crossmark-line {
+    stroke-dasharray: 28; /* Longitud total del trazo */
+    stroke-dashoffset: 28; /* Esconde el trazo */
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke: #e53935; /* Rojo */
+    animation: none;
+}
+
+.crossmark.animate .crossmark-line {
+    animation: draw-line 0.6s ease-in-out forwards;
+}
+
+.crossmark-line.static {
+    stroke-dashoffset: 0; /* Muestra la línea completa */
+}
+
+@keyframes draw-line {
+    to {
+        stroke-dashoffset: 0;
+    }
+}

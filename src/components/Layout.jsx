@@ -1,16 +1,14 @@
 import React from 'react';
 import Navbar from './Navbar';
-import Footer from './Footer';
 
 const Layout = ({ children }) => (
-  <div className="h-screen flex flex-col p-2 bg-[#f6f9fd]">
+  <div className="h-screen flex flex-col p-2 bg-[#ebedf0] pl-4 pr-4 pb-4">
     <Navbar />
     <div className="flex-grow flex overflow-hidden">
-      <main className="flex-grow  mt-4 flex flex-col overflow-hidden">
+      <main className="flex-grow  mt-4 flex flex-col overflow-hidden ">
         {children}
       </main>
     </div>
-      {/* <Footer /> */}
   </div>
 );
 

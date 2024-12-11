@@ -21,7 +21,6 @@ class Inventario {
 
     eliminar(producto) {
         const index = this.productos.findIndex(p => p.id === producto.id);
-        console.log(this.productos)
         if (index !== -1) {
             this.productos.splice(index, 1);
         }

@@ -7,7 +7,6 @@ const ESTADO = "Pendiente";
 const VISTA = false;
 
 const nuevaSolicitud = {
-    id: Math.floor(Math.random() * 100),
     fecha: FECHA_EMISION,
     estado: ESTADO,
     responsable: 'Diego Espinoza 2',
@@ -30,7 +29,24 @@ const nuevaSolicitud = {
     ]
 }
 
-const EnviarSolicitud = ({datosSolicitud}) => {
+const EnviarSolicitud = () => {
+
+    const [user, setUser] = useState(null);
+    const navigate = useNavigate();
+  
+  
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decoded = jwtDecode(token); // Decodificar el token
+        setUser({
+          nombre: decoded.nombre,
+          rol: decoded.rol,
+          foto: decoded.foto
+        });
+      }
+    }, []);
+
 
     const enviarSolicitud = async (e) => {
         e.preventDefault();

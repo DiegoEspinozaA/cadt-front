@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import categorias from "../data/categories.json"
 import areas from "../data/areas.json"
 import bodeja from "../data/bodeja.json"
-import inventario from "../logic/Inventario";
-import productosData from "../data/products.json"
 import { Producto } from "../logic/producto";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -11,14 +9,13 @@ import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Select from '@mui/material/Select';
 import Search from "../components/Search";
-import { Square, MoreVertical, ArrowLeft, ArrowRight, CircleX, Pencil } from 'lucide-react'
-
-
+import { Square, MoreVertical, ArrowLeft, ArrowRight, CircleX, Pencil, Loader } from 'lucide-react'
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import AgregarProducto from "../components/AgregarProducto";
-
+import { Image as ImageIcon } from "lucide-react";
+import InventoryFilters from "../components/InventoryFilters";
 
 const style = {
     position: 'absolute',
@@ -33,13 +30,61 @@ const style = {
     p: 4,
 };
 
-const inv = new inventario(productosData);
 
 function Inventario() {
     const itemsPerPage = 50;
-    const [productos, setProductos] = useState(inv.obtenerListaProductos());
+    const [productos, setProductos] = useState([]);
+    const [categorias, setCategorias] = useState([]);
+    const [areas, setAreas] = useState([]);
 
-    const [categoriaActiva, setCategoriaActiva] = useState(categorias[0].nombre);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setIsLoading(true); // Establecer el estado de carga en true al inicio
+                // Realizar solicitudes en paralelo
+                const [productosResponse, tiposResponse, areasResponse] = await Promise.all([
+                    fetch('http://localhost:3001/productos', {
+                        method: 'GET',
+                      
+                    }),
+                    fetch('http://localhost:3001/tipos', {
+                        method: 'GET',
+                      
+                    }),
+                    fetch('http://localhost:3001/areas', {
+                        method: 'GET',
+                        
+                    }),
+                ]);
+    
+                if (
+                    productosResponse.ok &&
+                    tiposResponse.ok &&
+                    areasResponse.ok
+                ) {
+                    const [productosData, tiposData, areasData] = await Promise.all([
+                        productosResponse.json(),
+                        tiposResponse.json(),
+                        areasResponse.json(),
+                    ]);
+                    setProductos(productosData);
+                    setCategorias(tiposData);
+                    setAreas(areasData);
+                } else {
+                    throw new Error('Error al obtener los datos del servidor.');
+                }
+            } catch (error) {
+                console.error('Error fetching datos:', error);
+            } finally {
+                setIsLoading(false)
+            }
+        };
+    
+        fetchData();
+    }, []);
+    
+
+    const [isLoading, setIsLoading] = useState(false);
     const [productoEditando, setProductoEditando] = useState(null);
 
     const [nuevoProducto, setNuevoProducto] = useState(() => {
@@ -52,28 +97,12 @@ function Inventario() {
         tipoProducto: "Todo"
     });
 
-    const handleChangeActiveCategory = (event, field) => {
-        setSelectFilters((prevFilters) => ({
-            ...prevFilters,
-            [field]: event.target.value
-        }));
-        setActivePage(1);
-    };
-
-
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(!open);
 
     const [modoModal, setModoModal] = useState("agregar"); // "agregar" o "editar"
 
     const handleAddProduct = () => {
-        const newProduct = {
-            id: Date.now(),
-            ...nuevoProducto,
-        };
-
-        inv.agregarProducto(newProduct);
-        actualizarInventario();
         setNuevoProducto(new Producto(0, "", 0, 0, "", ""));
     };
 
@@ -83,9 +112,6 @@ function Inventario() {
             setProductoEditando(nuevoProducto)
             const { id } = productoEditando; // ID del producto que se va a editar
             const index = productos.findIndex((p) => p.id === id);
-
-            inv.editarProducto(index, nuevoProducto);
-            actualizarInventario();
             // toast('Producto actualizado', {
             //   icon: (<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round" class="lucide lucide-info"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>),
             // });
@@ -93,33 +119,46 @@ function Inventario() {
     };
 
     const handleEliminar = (producto) => {
-        // Eliminamos el producto del array de manera inmutable
         const nuevosProductos = productos.filter((p) => p.id !== producto.id);
         setProductos(nuevosProductos);
-        inv.eliminar(producto);
-        //   toast('Producto eliminado correctamente', {
+        fetch(`http://localhost:3001/producto/${producto.id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                // console.log(data);
+            })
+            .catch(error => {
+                // console.error('Error al eliminar el producto:', error);
+            });
+        // Mostrar notificación de éxito (si está activado)
+        // toast('Producto eliminado correctamente', {
         //     icon: (<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5" /></svg>)
-        //   });
+        // });
     };
-
 
 
 
     const openModal = (modo, producto) => {
         setOpen(!open)
         setModoModal(modo);
+        console.log(producto);
         if (modo === "editar") {
             setProductoEditando(producto);
-            const productoEditando = new Producto(
+            let p = new Producto(
                 producto.id,
                 producto.nombre,
-                producto.precio,
-                producto.cantidad,
+                producto.stock,
+                producto.bodegaId,
                 producto.categoria,
-                producto.uso
+                producto.imagen,
+                producto.area,
             );
-
-            setNuevoProducto(productoEditando);
+            setProductoEditando(p);
+            setNuevoProducto(p);
         }
 
         else {
@@ -129,23 +168,8 @@ function Inventario() {
     };
 
 
-    const handleChangeSelect = (value) => {
-        setNuevoProducto({ ...nuevoProducto, categoria: value });
-    };
-
-    const handleChangeUsoSelect = (value) => {
-        setNuevoProducto({ ...nuevoProducto, uso: value });
-    };
-
     const [text, setText] = useState("");
-
-    const actualizarInventario = () => {
-        setProductos(inv.obtenerListaProductos());
-    };
-
-
     const [activePage, setActivePage] = useState(1);
-
     const startIndex = (activePage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
@@ -159,7 +183,6 @@ function Inventario() {
     });
 
     const productosPaginados = productosFiltrados.slice(startIndex, endIndex);
-
     const totalPages = Math.ceil(productosFiltrados.length / itemsPerPage);
 
     const next = () => {
@@ -172,23 +195,11 @@ function Inventario() {
         setActivePage(activePage - 1);
     };
 
-
     const handleClose = () => setOpen(false);
-
-
-
-    const [searchAllMode, setSearchAllMode] = useState(false);
-
-    const setSearchMode = () => {
-        setSearchAllMode(!searchAllMode);
-        if (!searchAllMode) {
-            setCategoriaActiva("Todo");
-        }
-    }
-
     const handleResetSearch = () => {
         setText("");
     };
+
     const handleResetFilters = () => {
         setSelectFilters({
             unidad: "Todo",
@@ -197,8 +208,6 @@ function Inventario() {
         })
     };
 
-
-    // modal para agregar un producto
     const [openAddModal, setOpenAddModal] = useState(false);
     const handleCloseAddModal = () => setOpenAddModal(false);
     const handleOpenAddModal = () => {
@@ -208,12 +217,12 @@ function Inventario() {
 
     return (
 
-        <div className='flex flex-row h-full'>
-            <div className=' w-full '>
-                <div className="flex flex-col h-full w-full">
+        <div className='flex flex-row h-full text-sm'>
+            <div className='w-full '>
+                <div className="flex flex-col h-full w-full ">
                     {/* Header Search, botones con opciones*/}
-                    <div className="w-full flex gap-4 items-center bg-gray-100 mb-4">
-                        <button className=" flex items-center justify-start gap-2 px-6 py-4 rounded-full  bg-gray-600 text-white hover:shadow-md "
+                    <div className="w-full flex gap-4 items-center mb-4">
+                        <button className=" flex items-center justify-start gap-2 px-5 py-4 rounded-lg bg-gray-600 text-gray-200 hover:bg-gray-700   transition-colors font-semibold hover:shadow-md "
                             onClick={() => handleOpenAddModal()}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14" /><path d="M12 5v14" />
@@ -223,183 +232,146 @@ function Inventario() {
                         </button>
                         <Search handleResetSearch={handleResetSearch} text={text} setText={setText} />
                     </div>
-                    <div className="bg-white pl-2 rounded-xl">
-                        {/* componentes de paginacion, elementos fijos en relacion a la tabla*/}
-                        <div className="sticky top-0 bg-white">
-                            <div className="flex gap-4 mt-4 items-center">
-                                <FormControl sx={{ width: 200 }} size="small"  >
-                                    <Select
-                                        sx={{ width: 200, borderRadius: '10px' }}
-                                        labelId="select-Area"
-                                        id="Area"
-                                        value={selectFilters.unidad}
-                                        onChange={(e) => handleChangeActiveCategory(e, 'unidad')}
-                                        className={"transition-all duration-200 flex" + (selectFilters.unidad !== "Todo" ? " bg-gray-300/40" : " hover:bg-zinc-100/80")}
-                                    >
-                                        <MenuItem value="Todo" className="">
-                                            Area
-                                        </MenuItem>
-                                        {areas.map((c) => (
-                                            <MenuItem key={c.id} value={c.nombre} className="flex items-center">
-                                                {c.nombre}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-
-                                <FormControl sx={{ width: 200 }} size="small" >
-                                    <Select
-                                        sx={{ width: 200, borderRadius: '10px' }}
-                                        labelId="select-Bodega"
-                                        id="Categoria"
-                                        value={selectFilters.bodega}
-                                        onChange={(e) => handleChangeActiveCategory(e, 'bodega')}
-                                        className={" transition-all duration-200 flex" + (selectFilters.bodega !== "Todo" ? " bg-gray-300/40" : " hover:bg-zinc-100/80")}
-                                    >
-                                        <MenuItem value="Todo">
-                                            Bodega
-                                        </MenuItem>
-                                        {bodeja.map((c) => (
-                                            <MenuItem key={c.id} value={c.nombre}>
-                                                {c.nombre}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-
-                                <FormControl sx={{ width: 200 }} size="small" >
-                                    <Select
-                                        sx={{ width: 200, borderRadius: '10px' }}
-                                        labelId="select-Tipo"
-                                        id="Tipo"
-                                        value={selectFilters.tipoProducto}
-                                        onChange={(e) => handleChangeActiveCategory(e, 'tipoProducto')}
-                                        className={"transition-all duration-200 flex" + (selectFilters.tipoProducto !== "Todo" ? " bg-gray-300/40" : " hover:bg-zinc-100/80")}
-                                    >
-                                        <MenuItem value="Todo" >
-                                            Tipo de producto
-                                        </MenuItem>
-                                        {categorias.map((c) => (
-                                            <MenuItem key={c.id} value={c.nombre} >
-                                                {c.nombre}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                                <button className="flex gap-2 transition-all duration-150 items-center rounded-lg py-2 px-4 hover:bg-gray-100 border border-gray-300"
-                                    onClick={handleResetFilters}
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></svg>
-                                    Reiniciar filtros
-                                </button>
-
-                            </div>
-                            <div className="flex items-center justify-between  bg-white mb-4 mt-4 ml-2">
-                                <div className="flex items-center">
-                                    <div className="flex items-center  h-full">
-                                        <button className="text-gray-800 hover:bg-gray-200 p-2 rounded-lg">
-                                            <Square className=" " size={24}
-                                            />
-                                        </button>
-
-                                    </div>
-
-                                    <button className="ml-5">
-                                        <MoreVertical className="text-gray-800" size={20} />
-                                    </button>
-
-                                </div>
-                                <div className="flex items-center text-sm text-gray-500 ">
-                                    <span>{activePage} de {totalPages}</span>
-                                    <button className="ml-4"
-                                        disabled={activePage === 1}
-                                        onClick={prev}
-                                    >
-                                        <ArrowLeft className={`transition-colors duration-100 ${activePage === 1 ? "text-gray-400" : "text-gray-800"}`} size={22} />
-                                    </button>
-                                    <button className="ml-4"
-                                        onClick={next}
-                                        disabled={activePage === totalPages}
-                                    >
-                                        <ArrowRight className={`transition-colors duration-100 ${activePage === 1 && activePage !== totalPages ? "text-gray-900" : "text-gray-400"}`} size={22}
-                                        />
-                                    </button>
-                                </div>
-                            </div>
-                            {/* <Tabs options={categorias} active={categoriaActiva} handleChangeActive={handleChangeActiveCategory} /> */}
+                    {isLoading ? (
+                        <div className="flex justify-center items-center h-full">
+                            <Loader size={40} className="animate-spin text-gray-600" />
+                            <p className="ml-4 text-gray-600">Cargando datos...</p>
                         </div>
-                    </div>
+                    ) : (
 
-                    <div className=" overflow-y-auto bg-white border-b border-gray-300 pb-[1px] h-full">
-                        <table className="w-full  ">
-                            <thead className="font-bold text-gray-600 sticky top-0  z-20">
-                                <tr className="bg-gray-100">
-                                    <th className="p-2 text-left pl-4">Nombre</th>
-                                    <th className="p-2 text-left">Precio</th>
-                                    <th className="p-2 text-left">Cantidad</th>
-                                    <th className="p-2 text-left"></th>
-                                </tr>
-                            </thead>
-                            <tbody >
-                                {productosPaginados.map((producto) => (
-                                    <tr key={producto.id} className="group sol cursor-pointer"
-                                        onClick={(e) => {
-                                            e.stopPropagation();  // Evita que el click se propague
-                                            openModal("editar", producto)
+                        <div className="h-full flex-grow flex flex-col overflow-hidden bg-white">
+                            <div className="pl-6 rounded-xl">
+                                {/* componentes de paginacion, elementos fijos en relacion a la tabla*/}
+                                <div className="sticky top-0 bg-white ">
+                                    <div className="flex items-center justify-between  bg-white mb-4 mt-4 ">
+                                        <div className="flex items-center">
+                                            <div className="flex items-center  h-full">
+                                                <button className="text-gray-800 hover:bg-gray-200 p-1 rounded-lg ml-3">
+                                                    <Square className=" " size={20}
+                                                    />
+                                                </button>
 
-                                        }}>
-                                        <td className=" p-2 flex items-center relative">
-                                            <div className="text-transparent group-hover:text-gray-400 absolute left-[-1px]">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical"><circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" /></svg>
                                             </div>
-                                            <button
-                                                className="p-2 rounded-full hover:bg-gray-200 mr-4 text-gray-400/60 group-hover:text-black h-full"
-                                                aria-label="Seleccionar"
-                                                onClick={(e) => e.stopPropagation()} // Evita que el click se propague
-                                            >
-                                                <Square size={22} />
+
+                                            <button className="ml-5">
+                                                <MoreVertical className="text-gray-400" size={20} />
                                             </button>
 
-                                            {producto.nombre}
-                                        </td>
-                                        <td className="p-2">{producto.precio}</td>
-                                        <td className="p-2">{producto.cantidad}</td>
-                                        <td className="px-4 py-3 text-right relative">
-                                            <div className=" flex justify-end items-center  text-gray-900 ">
-                                                <div className="absolute flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ">
-                                                    {/* {(project.uso === "Fraccionario" && project?.categoria) && <DialogCustomAnimation cajas={project.cajas} producto={project.nombre} />} */}
-                                                    <button
-                                                        className="p-2 rounded-full hover:bg-gray-300"
-                                                        aria-label="Editar"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();  // Evita que el click se propague
-                                                            openModal("editar", producto)
+                                        </div>
+                                        <div className="flex items-center text-sm text-gray-500 ">
+                                            <span>{activePage} de {totalPages}</span>
+                                            <button className="ml-4"
+                                                disabled={activePage === 1}
+                                                onClick={prev}
+                                            >
+                                                <ArrowLeft className={`transition-colors duration-100 ${activePage === 1 ? "text-gray-400" : "text-gray-800"}`} size={22} />
+                                            </button>
+                                            <button className="ml-4 mr-4"
+                                                onClick={next}
+                                                disabled={activePage === totalPages}
+                                            >
+                                                <ArrowRight className={`transition-colors duration-100 ${activePage === 1 && activePage !== totalPages ? "text-gray-900" : "text-gray-400"}`} size={22}
+                                                />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                                                        }}
-                                                    >
-                                                        <Pencil size={22} className="text-gray-600" />
-                                                    </button>
-                                                    <button
-                                                        className="p-2 rounded-full hover:bg-gray-300"
-                                                        aria-label="Rechazar"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleEliminar(producto)
-                                                        }}
-                                                    >
-                                                        <CircleX size={22} className="text-gray-700" />
-                                                    </button>
+                            <div className=" overflow-y-auto bg-white border-b border-gray-300 h-full mt-6 ">
+                                <InventoryFilters
+                                    selectFilters={selectFilters}
+                                    setSelectFilters={setSelectFilters}
+                                    areas={areas}
+                                    bodeja={bodeja}
+                                    categorias={categorias}
+                                    handleResetFilters={handleResetFilters}
+                                />
+                                <div>
+                                    {productosPaginados.map((producto) => (
+                                        <div key={producto.id} className="sol group cursor-pointer grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] border-b border-gray-100 last:border-b-0"
+                                            onClick={(e) => {
+                                                e.stopPropagation();  // Evita que el click se propague
+                                                openModal("editar", producto)
+
+                                            }}>
+                                            <div className="p-2 flex items-center relative">
+                                                <div className="text-transparent group-hover:text-gray-400">
+                                                    <div className="relative">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-grip-vertical "><circle cx="9" cy="12" r="1" /><circle cx="9" cy="5" r="1" /><circle cx="9" cy="19" r="1" /><circle cx="15" cy="12" r="1" /><circle cx="15" cy="5" r="1" /><circle cx="15" cy="19" r="1" /></svg>
+                                                    </div>
+
                                                 </div>
+                                                <button
+                                                    className="p-2 rounded-full hover:bg-gray-200 mr-4 text-gray-400/60 group-hover:text-black h-full"
+                                                    aria-label="Seleccionar"
+                                                    onClick={(e) => e.stopPropagation()} // Evita que el click se propague
+                                                >
+                                                    <Square size={20} />
+                                                </button>
+
+                                                <div className="flex items-center gap-2 relative group">
+                                                    {producto.imagen ? (
+                                                        <img
+                                                            src={producto.imagen}
+                                                            alt={producto.nombre || "Producto"}
+                                                            className="w-6 h-6 aspect-auto cursor-pointer bg-white border-2 p-[1px] border-gray-300 shadow-sm rounded-md"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-6 h-6 flex items-center justify-center bg-gray-200 border border-gray-300 shadow-sm rounded-md">
+                                                            <ImageIcon className="w-4 h-4 text-gray-500" />
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <span className="ml-4">
+                                                    {producto.nombre}
+                                                </span>
+
                                             </div>
 
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                            <div className="p-2 flex items-center">{producto.categoria}</div>
+                                            <div className="p-2 flex items-center">{producto.area}</div>
+                                            <div className="p-2 flex items-center">{producto.bodegaId}</div>
+                                            <div className="p-2 flex items-center">{producto.stock}</div>
+                                            <div className="p-2 flex items-center">{producto.descripcion}</div>
 
+
+                                            <div className=" text-right relative top-0 flex justify-end mr-2">
+                                                <div className=" flex justify-end items-center  text-gray-900">
+                                                    <div className="absolute flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ">
+                                                        <button
+                                                            className="p-2 rounded-full hover:bg-gray-300"
+                                                            aria-label="Editar"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();  // Evita que el click se propague
+                                                                openModal("editar", producto)
+
+                                                            }}
+                                                        >
+                                                            <Pencil size={22} className="text-gray-600" />
+                                                        </button>
+                                                        <button
+                                                            className="p-2 rounded-full hover:bg-gray-300"
+                                                            aria-label="Rechazar"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleEliminar(producto)
+                                                            }}
+                                                        >
+                                                            <CircleX size={22} className="text-gray-700" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
             <Modal
                 open={open}
@@ -408,6 +380,42 @@ function Inventario() {
                 <Box className="p-3" sx={style}>
                     <div className="">
                         <h2 className="text-xl font-bold mb-4 text-gray-900">{modoModal === "agregar" ? "Agregar Producto" : "Editar Producto"}</h2>
+                        <div className="mb-4 justify-center items-center flex">
+                            {nuevoProducto.imagen ? (
+                                <div className="border-2 border-gray-300 rounded-lg shadow-md p-2">
+                                    <img
+                                        src={nuevoProducto.imagen}
+                                        alt={nuevoProducto.nombre || "Producto"}
+                                        className="w-32 h-32 object-cover rounded-md"
+                                    />
+                                </div>
+                            ) : (
+                                <div className="">
+                                    <div className="relative">
+                                        <label title="Click to upload" htmlFor="button2" className="cursor-pointer flex items-center gap-4 px-6 py-4 before:border-gray-400/60 hover:before:border-gray-300 group before:bg-gray-100 before:absolute before:inset-0 before:rounded-3xl before:border before:border-dashed before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95">
+                                            <div className="w-max relative">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
+                                            </div>
+                                            <div className="relative">
+                                                <span className="block text-base font-semibold relative text-blue-900 group-hover:text-blue-500"> Sube una imagen del producto </span>
+                                                <span className="mt-0.5 block text-sm text-gray-500">Máximo 0.5 MB</span>
+                                                {/* {imagen &&
+                                                (<span className="mt-0.5 block text-sm text-gray-500">{imagen.name} ({(imagen.size / 1024 / 1024).toFixed(2)} MB)</span>)
+                                            } */}
+                                            </div>
+                                        </label>
+                                        <input type="file"
+                                            name="button2"
+                                            id="button2"
+                                            className="hidden"
+                                            accept="image/*"
+                                        // onChange={handleImageChange}
+                                        // key={imagenKey}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                         <div className="mb-4">
                             <TextField
                                 type="text"
@@ -422,8 +430,8 @@ function Inventario() {
                                 type="number"
                                 label="Cantidad"
                                 inputMode="numeric"
-                                value={nuevoProducto.cantidad}
-                                onChange={(e) => setNuevoProducto({ ...nuevoProducto, cantidad: parseInt(e.target.value) })}
+                                value={nuevoProducto.stock}
+                                onChange={(e) => setNuevoProducto({ ...nuevoProducto, stock: parseInt(e.target.value) })}
                                 className="border px-2 py-1 w-64 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                             />
                         </div>
@@ -477,90 +485,10 @@ function Inventario() {
                 handleCloseAddModal={handleCloseAddModal}
             >
                 <Box className="p-3" sx={style} >
-
-                    <AgregarProducto
+                    <AgregarProducto productos={productos} categorias={categorias} areas={areas}  setProductos={setProductos} 
                     />
                 </Box>
-
             </Modal>
-
-            {/* <Modal
-                open={openAddModal}
-                onClose={handleCloseAddModal}
-            >
-                <Box className="p-3" sx={style} >
-                    <div className="flex flex-col space-y-4">
-                        <h2 className="text-xl font-bold mb-4 text-gray-900">{modoModal === "agregar" ? "Agregar Producto" : "Editar Producto"}</h2>
-                        <div className="flex gap-2 w-full">
-
-                            <div className="">
-                                <TextField
-                                    type="text"
-                                    label="Nombre"
-                                    value={nuevoProducto.nombre}
-                                    onChange={(e) => setNuevoProducto({ ...nuevoProducto, nombre: e.target.value })}
-                                    className="border "
-                                />
-                            </div>
-                            <button className="bg-zinc-900 text-gray-100 rounded px-4">
-                                Crear
-                            </button>
-                        </div>
-
-
-                        <div className="">
-                            <TextField
-                                type="number"
-                                label="Cantidad"
-                                inputMode="numeric"
-                                value={nuevoProducto.cantidad}
-                                onChange={(e) => setNuevoProducto({ ...nuevoProducto, cantidad: parseInt(e.target.value) })}
-                                className="border px-2 py-1 w-64 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                            />
-                        </div>
-                        <div className="">
-                            <FormControl fullWidth>
-                                <InputLabel id="select-categoria">Categoria</InputLabel>
-                                <Select
-                                    labelId="select-categoria"
-                                    id="Categoria"
-                                    value={nuevoProducto.categoria}
-                                    label="categoria"
-                                    onChange={(e) => setNuevoProducto({ ...nuevoProducto, categoria: e.target.value })}
-                                >
-                                    {categorias.map((c) => (
-                                        <MenuItem key={c.id} value={c.nombre}>
-                                            {c.nombre}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-
-                        </div>
-                        <div className="mb-4">
-
-                        </div>
-                        <div>
-                        </div>
-                        <div className="flex justify-end space-x-2">
-                            <Button
-                                size="sm"
-                                onClick={productoEditando !== null ? editarProducto : handleAddProduct}
-                                className="px-4 py-2  text-white rounded"
-                            >
-                                {modoModal === "agregar" ? "Guardar" : "Actualizar"}
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                size="sm"
-                                onClick={handleCloseAddModal}
-                            >
-                                Cerrar
-                            </Button>
-                        </div>
-                    </div>
-                </Box>
-            </Modal> */}
         </div>
 
     );

@@ -1,27 +1,80 @@
-import Categoria from "../components/Categoria";
-import { Clock, CheckCircle, XCircle, Square, CircleX, Layers, Info, MoreVertical, ArrowRight, ArrowLeft, Search, Trash2, User} from 'lucide-react'
-
+import { useEffect, useState } from "react"
+import { jwtDecode } from "jwt-decode"
+import { User, BriefcaseMedical, FileInput, Hospital } from 'lucide-react'
+import { Link } from "react-router-dom"
 const categories = [
-    {categoria: "Inventario",            redirect: "inventario",     icono: (<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round" class="lucide lucide-briefcase-medical"><path d="M12 11v4"/><path d="M14 13h-4"/><path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M18 6v14"/><path d="M6 6v14"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg>) },
-    {categoria: "Solicitudes",           redirect: "solicitudes",        icono: (<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round" class="lucide lucide-file-input"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M2 15h10"/><path d="m9 18 3-3-3-3"/></svg>) },
-    {categoria: "Configuracion",   redirect: "admin", icono: (<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-linecap="round" strokeLinejoin="round" class="lucide lucide-cog"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"/><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/><path d="M12 2v2"/><path d="M12 22v-2"/><path d="m17 20.66-1-1.73"/><path d="M11 10.27 7 3.34"/><path d="m20.66 17-1.73-1"/><path d="m3.34 7 1.73 1"/><path d="M14 12h8"/><path d="M2 12h2"/><path d="m20.66 7-1.73 1"/><path d="m3.34 17 1.73-1"/><path d="m17 3.34-1 1.73"/><path d="m11 13.73-4 6.93"/></svg>)},
-    {categoria: "Empleado",               redirect: "empleado",     icono: (<User size={50} />) },
-];
+  {
+    categoria: "Funcionarios",
+    redirect: "/funcionarios",
+    icono: <User className="w-12 h-12 mb-4 text-primary" />,
+    roles: ["admin"],
+  },
+  {
+    categoria: "Inventario",
+    redirect: "/inventario",
+    icono: <BriefcaseMedical className="w-12 h-12 mb-4 text-primary" />,
+    roles: ["admin", "encargado"],
+  },
+  {
+    categoria: "Solicitudes",
+    redirect: "/solicitudes",
+    icono: <FileInput className="w-12 h-12 mb-4 text-primary" />,
+    roles: ["admin", "encargado"],
+  },
+  {
+    categoria: "Areas y bodegas",
+    redirect: "/areasbodegas",
+    icono: <Hospital  className="w-12 h-12 mb-4 text-primary" />,
+    roles: ["admin"],
+  }
+]
+
+const Categoria = ({ categoria, redirect, icono }) => (
+  <Link to={redirect}>
+    <div className="w-full h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-white border-2 cursor-pointer">
+      <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+        {icono}
+        <h2 className="text-xl font-semibold text-gray-800">{categoria}</h2>
+      </div>
+    </div>
+  </Link>
+)
 
 const Home = () => {
-    return (
-        <div className="h-screen grid grid-cols-4 grid-rows-4 place-items-center gap-12 p-16 md:p-24 text-md sm:text-xl md:text-2xl">
-            {categories.map((cat, index) => (
-                <Categoria
-                    key={index}
-                    categoria={cat.categoria}
-                    redirect={cat.redirect}
-                    icono={cat.icono}
-                />
-            ))}
+  const [rol, setRol] = useState(null)
+
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+    if (token) {
+      const decoded = jwtDecode(token)
+      setRol(decoded.rol)
+    }
+  }, [])
+
+  const filteredCategories = categories.filter((cat) =>
+    cat.roles.includes(rol)
+  )
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-6 md:p-12">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">
+          Panel de Control
+        </h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredCategories.map((cat, index) => (
+            <Categoria
+              key={index}
+              categoria={cat.categoria}
+              redirect={cat.redirect}
+              icono={cat.icono}
+            />
+          ))}
         </div>
-    );
-  };
-  
-  export default Home;
-  
+      </div>
+    </div>
+  )
+}
+
+export default Home
+

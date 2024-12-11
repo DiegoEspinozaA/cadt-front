@@ -1,30 +1,30 @@
 class Producto {
-    constructor(id, nombre, precio, cantidad, categoria, uso, area, bodega) {
+    constructor(id, nombre, precio, stock, categoria, imagen, area, bodega) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
-        this.cantidad = cantidad;
+        this.stock = stock;
         this.categoria = categoria;
-        this.uso = uso;
+        this.imagen = imagen;
         this.area = area;
         this.bodega = bodega;
     }
 
     descontar() {
-        this.cantidad -= 1;
+        this.stock -= 1;
     }
 
     getCantidad() {
-        return this.cantidad;
+        return this.stock;
     }
 
     editar(nuevosDatos) {
         this.id = this.id;
         this.nombre = nuevosDatos.nombre || this.nombre;
         this.precio = nuevosDatos.precio || this.precio;
-        this.cantidad = nuevosDatos.cantidad || this.cantidad;
+        this.stock = nuevosDatos.stock || this.stock;
         this.categoria = nuevosDatos.categoria || this.categoria;
-        this.uso = nuevosDatos.uso || this.uso;
+        this.imagen = nuevosDatos.imagen || this.imagen;
         this.area = nuevosDatos.area || this.area;
         this.bodega = nuevosDatos.bodega || this.bodega;
     }
@@ -50,8 +50,8 @@ class Reutilizable extends Producto {
 }
 
 class Fraccionario extends Producto {
-    constructor(id, nombre, precio, cantidad, categoria, uso, cajas){
-        super(id, nombre, precio, cantidad, categoria, uso)
+    constructor(id, nombre, precio, stock, categoria, imagen, cajas){
+        super(id, nombre, precio, stock, categoria, imagen)
         this.cajas = cajas
     }
   

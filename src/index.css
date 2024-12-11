@@ -15,17 +15,36 @@
     z-index: 2;
 }
 
-select {
-    -webkit-appearance: none;
-    outline: none;
-    box-shadow : none;
+
+.seal {
+    display: inline-block;
+    padding: 10px 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 10px;
+    width: 200px;
+    line-height: normal;
+    position: absolute; /* Posición absoluta para superposición */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    top: -20px; /* Ajusta la posición vertical */
+    left: 50%; /* Centra horizontalmente */
+    transform: translateX(-50%) rotate(-15deg); /* Inclina y centra el sello */
+    border-image-source: url('https://example.com/brush-border.png'); /* Cambia por tu URL de borde */
+    border-image-slice: 30; /* Ajusta el borde */
+    border-image-repeat: stretch;
+    z-index: 10; /* Asegura que el sello esté por encima */
 }
 
-select:focus{
-        outline: none;
+.seal.approved {
+    color: green;
+    background: rgba(0, 255, 0, 0.1);
 }
 
-select option{
-    outline: none;
-    all: unset;
+.seal.rejected {
+    color: red;
+    background: rgba(255, 0, 0, 0.1);
 }

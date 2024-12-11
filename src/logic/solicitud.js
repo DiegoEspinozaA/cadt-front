@@ -10,6 +10,7 @@ class Solicitud {
         this.productos = data.productos
         this.fecha_revision = null;
         this.vista = false;
+        this.eliminada = false
     }
     
     

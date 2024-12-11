@@ -1,0 +1,38 @@
+.check-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkmark {
+    width: 100px;
+    height: 100px;
+    stroke-width: 2;
+    stroke: #4caf50;
+    fill: none;
+}
+
+.checkmark-check {
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-miterlimit: 10;
+    stroke: #4caf50;
+    animation: none;
+}
+
+.checkmark.animate .checkmark-check {
+    animation: stroke 0.6s ease-in-out forwards;
+}
+
+.checkmark-check.static {
+    stroke-dashoffset: 0;
+}
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
